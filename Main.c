@@ -1,5 +1,11 @@
 
 
+	int game_loop();
+	int player_turn();
+	int cpu_turn();
+	int cpu_win();
+	int human_win();
+	int shoot();
 
 	int PLAYER = 0;
 	int CPU = 1;
