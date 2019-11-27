@@ -6,6 +6,7 @@
 	int cpu_win();
 	int human_win();
 	int shoot();
+	int printArrays();
 
 	int PLAYER = 0;
 	int CPU = 1;
@@ -106,5 +107,22 @@ void cpu_win(){
 }
 void human_win(){
 	
+}
+
+int printArrays(){
+	for (int i = 0; i < 6; i++){
+		for (int j = 0; j < 6; j++){
+			printf("%c   ", playerShips[i][j]; //prints the array for the player ships
+		}
+		printf("\n\n");
+	}
+	printf("\n\n\n");
+	for (int k = 0; i < 6; i++){
+		for (int m = 0; j < 6; j++){
+			printf("%c   ", playerGuesses[i][j]; //prints the array for player guesses
+		}
+		printf("\n\n");
+	}
+	return 0;
 }
 
