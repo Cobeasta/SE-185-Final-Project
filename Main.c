@@ -74,16 +74,56 @@ return 0 if they hit
 return 1 if they win
 **/
 int player_turn(){
-	int left, right, up, down, x = 0;
+	int left, right, up, down, x, triangle, circle, square = 0;
+	int prevLeft, prevRight, prevUp, prevDown, prevX, prevTriangle, prevCircle, prevSquare = 0;
+	
+	
 	
 	while(1){
-		
+		scanf("%d %d %d %d %d %d %d %d %d", timer, left, right, up, down, x, triangle, circle, square);
 	//read controller, use this to move the pointers location along the screen.	
 	//then call shoot to update the grids and return the output.
+	
+	prevLeft = left;
+	prevRight = right;
+	prevUp = up;
+	prevDown = down;
+	
+	if(left && prevLeft != left){
+		
+	}
+	else if(right && prevRight != right){
+		
+	}
+	else if(down && prevDown != down){
+		
+	}
+	else if(up && prevUp != up){
+		
+	}
+
+	if(x && prevX != x){
+		
+	}
+	else if(triangle && prevTriangle != triangle){
+		
+	}
+	else if(square && prevSquare != square){
+		
+	}
+	else if(circle && prevCircle != circle){
+		
+	}
+	
+	
+	prevX = x;
+	prevTriangle = triangle;
+	prevCircle = circle;
+	prevSquare = square;
 	}
 }
 
-/**
+/** 
 return -1 if they miss
 return 0 if they hit
 return 1 if they win
