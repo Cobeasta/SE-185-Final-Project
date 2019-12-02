@@ -3,7 +3,7 @@ imports
 */
 #include <stdio.h>
 #include <math.h>
-#include <ncurses/ncurses.h>
+#include <ncurses.h>
 #include<unistd.h>
 #include<time.h>
 
@@ -14,8 +14,8 @@ prototypes
 	int game_loop(); // for controlling the portion of the game where the game is in play
 	int player_turn();//for organizing events while it is the player's turn
 	int cpu_turn(); // for organizing events while it is the computer's turn
-	int cpu_win(); //for checking if the computer won the game
-	int human_win(); //for checking if the player won the game
+	void cpu_win(); //for checking if the computer won the game
+	void human_win(); //for checking if the player won the game
 	int shoot(); //"shoots" the inputted array of ships, returns if it is hit, or miss
 	int printArrays();
 
@@ -109,7 +109,7 @@ updates the map and
 	return -1 for miss
 	return 1 for hit
 **/
-int shoot(int player char * grid[][]]){
+int shoot(int player, char * grid[][]){
 	
 }
 
@@ -125,14 +125,14 @@ void human_win(){
 int printArrays(){
 	for (int i = 0; i < 6; i++){
 		for (int j = 0; j < 6; j++){
-			printf("%c   ", playerShips[i][j]; //prints the array for the player ships
+			printf("%c   ", playerShips[i][j]); //prints the array for the player ships
 		}
 		printf("\n\n");
 	}
 	printf("\n\n\n");
-	for (int k = 0; i < 6; i++){
-		for (int m = 0; j < 6; j++){
-			printf("%c   ", playerGuesses[i][j]; //prints the array for player guesses
+	for (int i = 0; i < 6; i++){
+		for (int j = 0; j < 6; j++){
+			printf("%c   ", playerGuesses[i][j]); //prints the array for player guesses
 		}
 		printf("\n\n");
 	}
