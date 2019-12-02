@@ -28,8 +28,11 @@ prototypes
 	char cpuGuesses[6][6];
 	
 int main(){
-		initscr();
+	initscr();
+	
+	game_loop();
 		
+	endwin();
 }
 
 /**
@@ -109,7 +112,7 @@ updates the map and
 	return -1 for miss
 	return 1 for hit
 **/
-int shoot(int player, char * grid[][]){
+int shoot(int player, char * grid[6][6]){
 	
 }
 
