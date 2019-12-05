@@ -1,10 +1,14 @@
+	#include <stdio.h>
+	#include <math.h>
+	#include <ncurses.h>
+	#include <time.h>
 
-
+	
 	int game_loop();
 	int player_turn();
 	int cpu_turn();
-	int cpu_win();
-	int human_win();
+	void cpu_win();
+	void human_win();
 	int shoot();
 	int printArrays();
 
@@ -18,6 +22,7 @@
 	
 int main(){
 	
+	game_loop();
 }
 
 /**
@@ -76,11 +81,12 @@ return 1 if they win
 int player_turn(){
 	int left, right, up, down, x, triangle, circle, square = 0;
 	int prevLeft, prevRight, prevUp, prevDown, prevX, prevTriangle, prevCircle, prevSquare = 0;
+int timer;
 	
 	
 	
 	while(1){
-		scanf("%d %d %d %d %d %d %d %d %d", timer, left, right, up, down, x, triangle, circle, square);
+		scanf("%d %d %d %d %d %d %d %d %d", &timer, &left, &right, &up, &down, &x, &triangle, &circle, &square);
 	//read controller, use this to move the pointers location along the screen.	
 	//then call shoot to update the grids and return the output.
 	
@@ -90,16 +96,16 @@ int player_turn(){
 	prevDown = down;
 	
 	if(left && prevLeft != left){
-		
+		mvprintw(2, 2, "Left");
 	}
 	else if(right && prevRight != right){
-		
+		mvprintw(2, 2, "Right");
 	}
 	else if(down && prevDown != down){
-		
+		mvprintw(2, 2, "Down");
 	}
 	else if(up && prevUp != up){
-		
+		mvprintw(2, 2, "Up");
 	}
 
 	if(x && prevX != x){
@@ -152,14 +158,14 @@ void human_win(){
 int printArrays(){
 	for (int i = 0; i < 6; i++){
 		for (int j = 0; j < 6; j++){
-			printf("%c   ", playerShips[i][j]; //prints the array for the player ships
+			printf("%c   ", playerShips[i][j]); //prints the array for the player ships
 		}
 		printf("\n\n");
 	}
 	printf("\n\n\n");
-	for (int k = 0; i < 6; i++){
-		for (int m = 0; j < 6; j++){
-			printf("%c   ", playerGuesses[i][j]; //prints the array for player guesses
+	for (int i = 0; i < 6; i++){
+		for (int j = 0; j < 6; j++){
+			printf("%c   ", playerGuesses[i][j]); //prints the array for player guesses
 		}
 		printf("\n\n");
 	}
