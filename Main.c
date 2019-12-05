@@ -88,7 +88,8 @@ return -1 if they miss
 return 0 if they hit
 return 1 if they win
 **/
-int player_turn(){
+int player_turn(char * playerGuesses[6][6]){
+	int row, col = 2;
 	int left, right, up, down, x, triangle, circle, square = 0;
 	int prevLeft, prevRight, prevUp, prevDown, prevX, prevTriangle, prevCircle, prevSquare = 0;
 int timer;
@@ -119,7 +120,7 @@ int timer;
 	}
 
 	if(x && prevX != x){
-		
+		shoot(row, col, 
 	}
 	else if(triangle && prevTriangle != triangle){
 		
@@ -153,13 +154,13 @@ updates the map and
 	return -1 for miss
 	return 1 for hit
 **/
-int shoot(int player, char * grid[6][6], int row, int column){ //grid is the computer's boat array
-	if (grid[row][column] == 'O'){
-		playerGuesses[row][column] = 'X'; //symbol for hit
+int shoot(int player, char * spot, int row, int column){ //grid is the computer's boat array
+	if (*spot == 'O'){
+		*spot =  'X'; //symbol for hit
 		printArrays();
 		return 1;
 	} else {
-		playerGuesses[row][column] = '*'; //symbol for miss
+		* spot = '*'; //symbol for miss
 		printArrays();
 		return -1;
 	}
