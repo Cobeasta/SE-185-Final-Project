@@ -28,6 +28,9 @@
 	char cpuGuesses[6][6];
 	
 int main(){
+	
+	srand(time(NULL));
+	
 	initscr();
 	
 	game_loop();
@@ -145,7 +148,30 @@ return 0 if they hit
 return 1 if they win
 **/
 int cpu_turn(){
+	int tempRow;
+	int tempCol;
 	
+	while (1) {
+		tempRow = rand() % 6;
+		tempCol = rand() % 6; //random guess on grid
+	
+		if ((playerShips[tempRow][tempCol] == 'X')|| (playerShips[tempRow][tempCol] == '*')) //if the computer has already guessed there
+			continue;
+		} else {
+			if (playerShips[tempRow][tempCol] == 'O'){ //hit- change boat to hit boat
+				playerShips[tempRow][tempCol] = 'X';
+				if (cpu_win){
+					return 1;
+				} else {
+					return 0;
+				}
+			} else if (playerShips[tempRow][tempCol] == '-') { //miss- change empty space to missed empty space
+				playerShips[tempRow][tempCol] = '*';
+				return 0;
+			}
+		}
+	}
+	return 0;
 }
 
 /**
@@ -167,10 +193,34 @@ int shoot(int player, char * grid[6][6], int row, int column){ //grid is the com
 
 
 void cpu_win(){
-	
+	int count = 0;
+	for (int i = 0; i < 6; i++) {
+		for (int j = 0; j < 6; j++) {
+			if (playerShips[i][j] == 'X') //count all of the computer's hits
+				count += 1;
+			}
+		}
+	}
+	if (count < 6){ //haven't won yet
+		return 0;
+	} else if (count == 6) { //hit all ships
+		return 1;
+	}
 }
 void human_win(){
-	
+	int count = 0;
+	for (int i = 0; i < 6; i++) {
+		for (int j = 0; j < 6; j++) {
+			if (playerGuesses[i][j] == 'X') //count all of the player's hits
+				count += 1;
+			}
+		}
+	}
+	if (count < 6){ //haven't won yet
+		return 0;
+	} else if (count == 6) { //hit all ships
+		return 1;
+	}
 }
 
 
