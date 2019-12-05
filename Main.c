@@ -153,7 +153,7 @@ updates the map and
 	return -1 for miss
 	return 1 for hit
 **/
-int shoot(int player, char * grid[6][6], row, column){ //grid is the computer's boat array
+int shoot(int player, char * grid[6][6], int row, int column){ //grid is the computer's boat array
 	if (grid[row][column] == 'O'){
 		playerGuesses[row][column] = 'X'; //symbol for hit
 		printArrays();
