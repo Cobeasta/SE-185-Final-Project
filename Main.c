@@ -10,6 +10,13 @@
 	void cpu_win();
 	void human_win();
 	int shoot();
+
+	int game_loop(); // for controlling the portion of the game where the game is in play
+	int player_turn();//for organizing events while it is the player's turn
+	int cpu_turn(); // for organizing events while it is the computer's turn
+	void cpu_win(); //for checking if the computer won the game
+	void human_win(); //for checking if the player won the game
+	int shoot(); //"shoots" the inputted array of ships, returns if it is hit, or miss
 	int printArrays();
 
 	int PLAYER = 0;
@@ -21,8 +28,11 @@
 	char cpuGuesses[6][6];
 	
 int main(){
+	initscr();
 	
 	game_loop();
+		
+	endwin();
 }
 
 /**
@@ -143,8 +153,16 @@ updates the map and
 	return -1 for miss
 	return 1 for hit
 **/
-int shoot(int player){
-	
+int shoot(int player, char * grid[6][6], row, column){ //grid is the computer's boat array
+	if (grid[row][column] == 'O'){
+		playerGuesses[row][column] = 'X'; //symbol for hit
+		printArrays();
+		return 1;
+	} else {
+		playerGuesses[row][column] = '*'; //symbol for miss
+		printArrays();
+		return -1;
+	}
 }
 
 
@@ -155,20 +173,42 @@ void human_win(){
 	
 }
 
+
 int printArrays(){
+	initscr();
+	int row = 5;
+	int column = 5;
+	
+	mvprintw(row - 1, column, "Your Boats");
+	
 	for (int i = 0; i < 6; i++){
 		for (int j = 0; j < 6; j++){
-			printf("%c   ", playerShips[i][j]); //prints the array for the player ships
+
+			mvprintw(row, column, "%c", playerShips[i][j]); //prints the array for the player ships
+			refresh();
+			column += 4;
 		}
-		printf("\n\n");
+		row += 2;
+		column = 5;
 	}
-	printf("\n\n\n");
-	for (int i = 0; i < 6; i++){
-		for (int j = 0; j < 6; j++){
-			printf("%c   ", playerGuesses[i][j]); //prints the array for player guesses
+
+
+	column = 35;
+	row = 5;
+	
+	mvprintw(row - 1, column, "Your Guesses");
+
+	for (int g = 0; g < 6; g++){
+		for (int h = 0; h < 6; h++){
+			mvprintw(row, column, "%c", playerGuesses[i][j]); //prints the array for player guesses
+			refresh();
+			column += 4;
 		}
-		printf("\n\n");
+		row += 2;
+		column = 35;
 	}
+	
+	refresh();
 	return 0;
 }
 
