@@ -2,14 +2,7 @@
 	#include <math.h>
 	#include <ncurses.h>
 	#include <time.h>
-
-	
-	int game_loop();
-	int player_turn();
-	int cpu_turn();
-	void cpu_win();
-	void human_win();
-	int shoot();
+	#include <stdlib.h>
 
 	int game_loop(); // for controlling the portion of the game where the game is in play
 	int player_turn();//for organizing events while it is the player's turn
