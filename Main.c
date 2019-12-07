@@ -2,15 +2,13 @@
 	#include <math.h>
 	#include <ncurses.h>
 	#include <time.h>
+	#include <stdlib.h>
 
 	
-	int game_loop();
-	int player_turn();
-	int cpu_turn();
-	void cpu_win();
-	void human_win();
-	int shoot();
-	void initGrid();
+	
+	
+	
+	
 
 	const char EMPTY = '-';
 	const char HIT = 'X';
@@ -21,11 +19,12 @@
 	int game_loop(); // for controlling the portion of the game where the game is in play
 	int player_turn();//for organizing events while it is the player's turn
 	int cpu_turn(); // for organizing events while it is the computer's turn
-	void cpu_win(); //for checking if the computer won the game
-	void human_win(); //for checking if the player won the game
+	int cpu_win(); //for checking if the computer won the game
+	int human_win(); //for checking if the player won the game
 	int shoot(); //"shoots" the inputted array of ships, returns if it is hit, or miss
-	int printArrays();
-
+	int printArrays();//prints the arrays
+	void initGrid();//fills the arrays with empty spots
+	
 	int PLAYER = 0;
 	int CPU = 1;
 	//grids for playing
@@ -202,7 +201,7 @@ int cpu_turn(){
 		tempRow = rand() % 6;
 		tempCol = rand() % 6; //random guess on grid
 	
-		if ((playerShips[tempRow][tempCol] == 'X')|| (playerShips[tempRow][tempCol] == '*')) //if the computer has already guessed there
+		if ((playerShips[tempRow][tempCol] == 'X')|| (playerShips[tempRow][tempCol] == '*')){ //if the computer has already guessed there
 			continue;
 		} else {
 			if (playerShips[tempRow][tempCol] == 'O'){ //hit- change boat to hit boat
@@ -256,11 +255,11 @@ int shoot(int player, int row, int col){ //grid is the computer's boat array
 }
 
 
-void cpu_win(){
+int cpu_win(){
 	int count = 0;
 	for (int i = 0; i < 6; i++) {
 		for (int j = 0; j < 6; j++) {
-			if (playerShips[i][j] == 'X') //count all of the computer's hits
+			if (playerShips[i][j] == 'X'){ //count all of the computer's hits
 				count += 1;
 			}
 		}
@@ -271,15 +270,16 @@ void cpu_win(){
 		return 1;
 	}
 }
-void human_win(){
+int human_win(){
 	int count = 0;
 	for (int i = 0; i < 6; i++) {
 		for (int j = 0; j < 6; j++) {
-			if (playerGuesses[i][j] == 'X') //count all of the player's hits
+			if (playerGuesses[i][j] == 'X'){ //count all of the player's hits
 				count += 1;
 			}
 		}
 	}
+	
 	if (count < 6){ //haven't won yet
 		return 0;
 	} else if (count == 6) { //hit all ships
