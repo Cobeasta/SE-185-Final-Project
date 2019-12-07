@@ -3,6 +3,7 @@
 	#include <ncurses.h>
 	#include <time.h>
 	#include <stdlib.h>
+	#include <string.h>
 
 	
 	
@@ -12,7 +13,7 @@
 
 	const char EMPTY = '-';
 	const char HIT = 'X';
-	const char MISS = '*';
+	const char MISS = '!';
 	const char BOAT = 'O';
 	const char  SELECTION = 'W';
 
@@ -30,6 +31,7 @@
 	//grids for playing
 	char playerShips[6][6];
 	char cpuShips[6][6];
+	
 	char playerGuesses[6][6];
 	char cpuGuesses[6][6];
 	
@@ -41,8 +43,10 @@ int main(){
 	
 	initscr();
 	initGrid();
-	//printArrays();
 	userBoatPlacement();
+	printArrays();
+	
+	
 	game_loop();
 		
 	endwin();
@@ -58,7 +62,9 @@ int game_loop(){
 
 	int turn = 0; // 0 for human turn, 1 for cpu turn
 	int i = player_turn();
+	printArrays();
 	while(1){
+		printArrays();
 		if(turn == PLAYER){
 			i = player_turn();
 		}
@@ -69,10 +75,12 @@ int game_loop(){
 		//player hits
 		if(i == 0 && turn == PLAYER){
 			//player has another turn, grid is already updated
+			
 			continue;
 		}
 		//player misses
 		else if(i == -1 && turn == PLAYER){
+			
 			turn = CPU;
 		}
 		//player wins
@@ -100,10 +108,13 @@ return -1 if they miss
 return 0 if they hit
 return 1 if they win
 **/
-int player_turn(char * playerGuesses[6][6]){
+int player_turn(){
+	int gridRow = 0;
+	int gridCol = 0;
 	int row = 5;
 	int col = 35;
-	int left, right, up, down, x, triangle, circle, square = 0;
+	int left, right, up, down, x, triangle, circle, square, button_R3,
+		button_L3, button_options, button_share, button_R2, button_L2, button_R1, button_L1  = 0;
 	int prevLeft, prevRight, prevUp, prevDown, prevX, prevTriangle, prevCircle, prevSquare = 0;
 	int timer;
 	mvprintw(row, col, "%c", SELECTION);
@@ -111,26 +122,31 @@ int player_turn(char * playerGuesses[6][6]){
 	
 	
 	while(1){
-		scanf("%d, %d,%d,%d,%d, %d,%d,%d,%d", &timer, &triangle, &circle, &x, &square, &up, &left, &down, &right);
+		scanf("%d, %d,%d,%d,%d, %d,%d,%d,%d,%d,%d,%d,%d, %d,%d,%d,%d", &timer, 
+		&triangle, &circle, &x, &square, &button_R3, &button_L3, &button_options,
+		&button_share, &button_R2, &button_L2, &button_R1, &button_L1, &up, &left, &down, &right);
 	//read controller, use this to move the pointers location along the screen.	
 	//then call shoot to update the grids and return the output.
 	if(left && prevLeft != left){
 		mvprintw(row +2, col+2, "  ");
-
 		col -= 4;
+		gridCol--;
 		if(col < 35){
 			col = 35;
+			gridCol++;
 		}
 		printArrays();
 		mvprintw(row, col, "%c", SELECTION);
 	}
 	else if(right && prevRight != right){
 		mvprintw(row, col, "  ");
-
 		col += 4;
+		gridCol++;
+		gridCol++;
 		if(col > 56)
 		{
 			col = 55;
+			gridCol--;
 		}
 		printArrays();
 	mvprintw(row, col, "%c", SELECTION);
@@ -138,10 +154,11 @@ int player_turn(char * playerGuesses[6][6]){
 	}	
 	else if(down && prevDown != down){
 		mvprintw(row, col, "  ");
-
 		row += 2;
+		gridRow++;
 		if(row > 15){
 			row = 15;
+			gridRow--;
 		}
 		printArrays();
 	mvprintw(row, col, "%c", SELECTION);
@@ -149,10 +166,13 @@ int player_turn(char * playerGuesses[6][6]){
 	}
 	else if(up && prevUp != up){
 		mvprintw(row, col, "  ");
-
+		
 		row -= 2;
+		gridRow--;		
+
 		if(row < 5){
 			row = 5;
+			gridRow++;
 		}
 		printArrays();
 	mvprintw(row, col, "%c", SELECTION);
@@ -160,8 +180,8 @@ int player_turn(char * playerGuesses[6][6]){
 	}
 
 	if(x && prevX != x){
-		printArrays();
-		return shoot(row, col);
+		return shoot(PLAYER, gridRow, gridCol);
+
 		
 	}
 	else if(triangle && prevTriangle != triangle){
@@ -330,10 +350,10 @@ int printArrays(){
 void initGrid(){
 	for(int i = 0; i < 6; i++){
 		for (int j = 0; j < 6; j++){
-			playerShips[i][j] = '-';
-			playerGuesses[i][j] = '-';
-			cpuShips[i][j] = '-';
-			cpuGuesses[i][j] = '-';
+			playerShips[i][j] = EMPTY;
+			playerGuesses[i][j] = EMPTY;
+			cpuShips[i][j] = EMPTY;
+			cpuGuesses[i][j] = EMPTY;
 		}
 	}
 }
