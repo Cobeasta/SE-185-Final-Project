@@ -24,10 +24,11 @@
 	int cpu_turn(); // for organizing events while it is the computer's turn
 	int cpu_win(); //for checking if the computer won the game
 	int human_win(); //for checking if the player won the game
-	int shoot(); //"shoots" the inputted array of ships, returns if it is hit, or miss
+	int shoot(int player, int row, int col); //"shoots" the inputted array of ships, returns if it is hit, or miss
 	int printArrays();//prints the arrays
 	void initGrid();//fills the arrays with empty spots
 	void userBoatPlacement();
+	
 	int PLAYER = 0;
 	int CPU = 1;
 	//grids for playing
@@ -39,8 +40,8 @@
 	
 	//compile with gcc Main.c -o main.exe -lncurses
 	//run with  ./ds4rd.exe -d 054c:05c4 -D DS4_BT -t -b -bd -bt | ./main.exe
-int main(){
-	
+void main(){
+	int i;
 	srand(time(NULL));
 	
 	initscr();
@@ -48,11 +49,14 @@ int main(){
 	userBoatPlacement();
 	clear();
 	printArrays();
-	
-	
-	game_loop();
-		
+	i = game_loop();
 	endwin();
+	/*if (i == 10){
+		printf("human win");
+	}else{
+		printf("cpu win");
+	}*/
+	
 }
 
 /**
@@ -62,54 +66,69 @@ int main(){
  0 if the game draws
 **/
 int game_loop(){
-
-	int turn = 0; // 0 for human turn, 1 for cpu turn
-	int i = player_turn();
+	int counter = 0;
+	int cpuCounter = 0;
+	int turn = PLAYER; // 0 for human turn, 1 for cpu turn
+	int i;
 	printArrays();
 	while(1){
+		mvprintw(0, 0, "%d", turn);
+		//++counter;
+		
+		
 		printArrays();
 		if(turn == PLAYER){
 			i = player_turn();
 		}
-		else{
+		else if(turn == CPU){
 			i = cpu_turn();
-		}	
+		}
+		//mvprintw(0, 25, "%d", counter);
+		refresh();
+		if(turn == PLAYER){
+			
+			if(i == 1){// 1 is hit
+				turn = PLAYER;
+				counter++;
+				
+			}
+			else{ // -1 is miss
+				turn = CPU;
+			}
+			/*if (human_win()){
+			return -10;
+		}*/
+		}
 		
-		//player hits
-		if(i == 0 && turn == PLAYER){
-			//player has another turn, grid is already updated
+		
+		else if (turn == CPU){
+			if(i == 1){// 1 is hit
+				turn = CPU;
+				//cpuCounter++;
+				
+			}
+			else{ // -1 is miss
+				--turn;
+			}
 			
-			continue;
 		}
-		//player misses
-		else if(i == -1 && turn == PLAYER){
-			
-			turn = CPU;
-		}
-		//player wins
-		else if(i == 1 && turn == PLAYER){
+		
+		if(counter >= 7){
 			return 1;
 		}
-		//cpu hits
-		else if(i == 0 && turn == CPU){
-			//cpu has another turn, grid is already updated
-			continue;
-		}
-		//cpu misses
-		else if(i == -1 && turn == CPU){
-			turn = PLAYER;
-		}
-		//cpu wins
-		else{
+		else if(cpuCounter >= 6){
 			return -1;
 		}
+		//if (cpu_win()){
+		//	return 10;
+		//}
 	}
+	
 }
 
 /**
 return -1 if they miss
-return 0 if they hit
-return 1 if they win
+return 1 if they hit
 **/
 int player_turn(){
 	int gridRow = 0;
@@ -144,7 +163,6 @@ int player_turn(){
 	else if(right && prevRight != right){
 		mvprintw(row, col, "  ");
 		col += 4;
-		gridCol++;
 		gridCol++;
 		if(col > 56)
 		{
@@ -214,34 +232,28 @@ int player_turn(){
 
 /** 
 return -1 if they miss
-return 0 if they hit
-return 1 if they win
+return 1 if they hit
 **/
 int cpu_turn(){
+	//areturn -1;
+	
 	int tempRow;
 	int tempCol;
-	
+	int result;
 	while (1) {
-		tempRow = rand() % 6;
-		tempCol = rand() % 6; //random guess on grid
-	
-		if ((playerShips[tempRow][tempCol] == 'X')|| (playerShips[tempRow][tempCol] == '*')){ //if the computer has already guessed there
-			continue;
-		} else {
-			if (playerShips[tempRow][tempCol] == 'O'){ //hit- change boat to hit boat
-				playerShips[tempRow][tempCol] = 'X';
-				if (cpu_win){
-					return 1;
-				} else {
-					return 0;
-				}
-			} else if (playerShips[tempRow][tempCol] == '-') { //miss- change empty space to missed empty space
-				playerShips[tempRow][tempCol] = '*';
-				return 0;
-			}
+		tempRow = (int) (rand() % 6);
+		tempCol = (int) (rand() % 6); //random guess on grid
+		mvprintw(0, 3, "%d, %d", tempRow, tempCol);
+		refresh();
+		if ((cpuGuesses[tempRow][tempCol] == HIT)|| (cpuGuesses[tempRow][tempCol] == MISS)){ //if the computer has already guessed ther
+			
+		}else{
+			result =  shoot(CPU, tempRow, tempCol);
+			mvprintw(0, 10, "%d", result);
+			refresh();
+			return result;
 		}
-	}
-	return 0;
+	}		
 }
 
 /**
@@ -257,6 +269,7 @@ int shoot(int player, int row, int col){ //grid is the computer's boat array
 			return 1;
 		}
 		else{
+			
 			cpuShips[row][col] = MISS;
 			playerGuesses[row][col] = MISS;
 			return -1;
@@ -283,7 +296,7 @@ int cpu_win(){
 	int count = 0;
 	for (int i = 0; i < 6; i++) {
 		for (int j = 0; j < 6; j++) {
-			if (playerShips[i][j] == 'X'){ //count all of the computer's hits
+			if (playerShips[i][j] == HIT){ //count all of the computer's hits
 				count += 1;
 			}
 		}
@@ -298,7 +311,7 @@ int human_win(){
 	int count = 0;
 	for (int i = 0; i < 6; i++) {
 		for (int j = 0; j < 6; j++) {
-			if (playerGuesses[i][j] == 'X'){ //count all of the player's hits
+			if (playerGuesses[i][j] == HIT){ //count all of the player's hits
 				count += 1;
 			}
 		}
@@ -313,7 +326,6 @@ int human_win(){
 
 
 int printArrays(){
-	initscr();
 	int row = 5;
 	int column = 5;
 	
@@ -374,7 +386,7 @@ void userBoatPlacement(){
 	for(i=0; i<=5; ++i){
 		for (j=0; j<=5; ++j){
 			//playerShips[i][j] = EMPTYSPACE;
-			playerShips[i][j] = '*';
+			playerShips[i][j] = EMPTY;
 		}
 	}//initialize all values
 	
@@ -456,7 +468,7 @@ void userBoatPlacement(){
 			//check if boat is there
 			if(allignment%2){
 				for(i=0;i<=shipLength;++i){
-					if(playerShips[y_position-i][x_position]=='='){
+					if(playerShips[y_position-i][x_position]==BOAT){
 						clear = 0;
 						++shipLength;
 						break;
@@ -466,7 +478,7 @@ void userBoatPlacement(){
 			
 			if(!(allignment%2)){
 				for(i=0;i<=shipLength;++i){
-					if(playerShips[y_position][x_position+i]=='='){
+					if(playerShips[y_position][x_position+i]==BOAT){
 						clear = 0;
 						++shipLength;
 						break;
@@ -476,13 +488,13 @@ void userBoatPlacement(){
 			
 			if(allignment%2 && clear){
 				for(i=0;i<=shipLength;++i){
-					playerShips[y_position-i][x_position]='=';
+					playerShips[y_position-i][x_position]=BOAT;
 				}
 			}//place boat verticle
 	
 			if(!(allignment%2) && clear){
 				for(i=0;i<=shipLength;++i){
-					playerShips[y_position][x_position+i]='=';
+					playerShips[y_position][x_position+i]=BOAT;
 				}
 			}//place boat horizontal
 		
@@ -499,16 +511,15 @@ void userBoatPlacement(){
 	
 	if(allignment%2){
 		for(i=0;i<shipLength;++i){
-			mvaddch((y_position-i)*2, x_position*3, 'A');
+			mvaddch((y_position-i)*2, x_position*3, SELECTION);
 		}
 	}//showing where ship will be verticle
 	
 	if(!(allignment%2)){
 		for(i=0;i<shipLength;++i){
-			mvaddch(y_position*2, (x_position+i)*3, 'A');
+			mvaddch(y_position*2, (x_position+i)*3, SELECTION);
 		}
 	}//showing where ship will be horizontal
-	mvprintw(20, 0, "%d", allignment);
 	refresh();
 	
 	}//while 1
