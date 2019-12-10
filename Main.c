@@ -28,6 +28,7 @@
 	int printArrays();//prints the arrays
 	void initGrid();//fills the arrays with empty spots
 	void userBoatPlacement();
+	void cpuBoatPlacement ();
 	
 	int PLAYER = 0;
 	int CPU = 1;
@@ -44,17 +45,24 @@ void main(){
 	int i;
 	srand(time(NULL));
 	
-	initscr();
-	initGrid();
-	userBoatPlacement();
-	clear();
-	printArrays();
-	i = game_loop();
-	endwin();
+	initscr(); //NCURSES NEW WINDOW
+	
+	initGrid();//INITILIZING ARRAYS 
+	
+	cpuBoatPlacement();//PLACE COMPUTER BOATS
+	
+	userBoatPlacement();//USER BOATS
+	clear();//PREPARE FOR GAME 
+	
+	printArrays();//PRINT GAME 
+	
+	i = game_loop();//START GAME
+	endwin();//END NCUSES
+	
 	/*if (i == 10){
-		printf("human win");
+		printf("YOU WIN!!");
 	}else{
-		printf("cpu win");
+		printf("YOU LOSE :(");
 	}*/
 	
 }
@@ -73,7 +81,6 @@ int game_loop(){
 	printArrays();
 	while(1){
 		mvprintw(0, 0, "%d", turn);
-		//++counter;
 		
 		
 		printArrays();
@@ -94,17 +101,14 @@ int game_loop(){
 			}
 			else{ // -1 is miss
 				turn = CPU;
-			}
-			/*if (human_win()){
-			return -10;
-		}*/
+			}	
 		}
 		
 		
 		else if (turn == CPU){
 			if(i == 1){// 1 is hit
 				turn = CPU;
-				//cpuCounter++;
+				
 				
 			}
 			else{ // -1 is miss
@@ -113,15 +117,12 @@ int game_loop(){
 			
 		}
 		
-		if(counter >= 7){
-			return 1;
+		if (cpu_win()){
+			return 10;
 		}
-		else if(cpuCounter >= 6){
-			return -1;
-		}
-		//if (cpu_win()){
-		//	return 10;
-		//}
+		if (human_win()){
+			return -10;
+		}	
 	}
 	
 }
@@ -523,5 +524,132 @@ void userBoatPlacement(){
 	refresh();
 	
 	}//while 1
+}
+
+void cpuBoatPlacement()
+{
+    //initializing Orientation
+    int carrierRot;
+    int destroyerRot;
+    int pbRot;
+
+    //Orientation (vertical or horizontal)
+
+   	 //carrier rotation
+
+   		 int randCarrierRot = (rand() % 2);//sets randCarrierRot = 0 or 1
+
+   		 if (randCarrierRot == 1)
+   		 {
+   			 carrierRot = 1;//1 will be vertical
+   		 }
+   		 else
+   		 {
+   			 carrierRot = 0;//0 will be horizontal
+   		 }
+
+
+   	 //destoyer rotation
+
+   		 int randDestroyerRot = (rand() % 2);
+
+   		 if (randDestroyerRot == 1)
+   		 {
+   			 destroyerRot = 1;//1 will be vertical
+   		 }
+   		 else
+   		 {
+   			 destroyerRot = 0;//0 will be horizontal
+   		 }
+
+    //carrier position
+
+   	 int xPosCarrier = (rand() % 6); //gets random value for carrier x pos
+   	 int yPosCarrier = (rand() % 6); //gets random value for carrier y pos
+
+   	 if(randCarrierRot == 1)//if carrier is vertical
+   	 {
+   		 if(yPosCarrier >= 2)//if carrier will fit in grid
+   		 {
+   			 cpuShips[xPosCarrier][yPosCarrier] = BOAT;
+   			 cpuShips[xPosCarrier][yPosCarrier-1] = BOAT;
+   			 cpuShips[xPosCarrier][yPosCarrier-2] = BOAT;
+   		 }
+   		 else//if carrier doesn't fit in the grid
+   		 {
+   			 cpuShips[xPosCarrier][yPosCarrier] = BOAT;
+   			 cpuShips[xPosCarrier][yPosCarrier+1] = BOAT;
+   			 cpuShips[xPosCarrier][yPosCarrier+2] = BOAT;
+   		 }
+   	 }
+   	 else if(randCarrierRot == 0)//if carrier is horizontal
+   	 {
+   		 if(xPosCarrier >= 2)//if carrier will fit in grid
+   		 {
+   			 cpuShips[xPosCarrier][yPosCarrier] = BOAT;
+   			 cpuShips[xPosCarrier-1][yPosCarrier] = BOAT;
+   			 cpuShips[xPosCarrier-2][yPosCarrier] = BOAT;
+   		 }
+   		 else//if carrier doesn't fit in grid
+   		 {
+   			 cpuShips[xPosCarrier][yPosCarrier] = BOAT;
+   			 cpuShips[xPosCarrier+1][yPosCarrier] = BOAT;
+   			 cpuShips[xPosCarrier+2][yPosCarrier] = BOAT;
+   		 }
+   	 }
+
+   	 //destroyer position
+
+   	 do {
+
+   		 int xPosDestroyer = (rand() % 6); //gets random value for destroyer x pos
+   		 int yPosDestroyer = (rand() % 6); //gets random value for destroyer y pos
+
+   		 if(randDestroyerRot == 1)//if destroyer is vertical
+   		 {
+   			 if(yPosDestroyer >= 1)//if destroyer will fit in grid
+   			 {
+   				 if(cpuShips[xPosDestroyer][yPosDestroyer]!= BOAT &&
+   					  cpuShips[xPosDestroyer][yPosDestroyer-1]!= BOAT) //if there is not a ship already there
+   				 {
+   					 cpuShips[xPosDestroyer][yPosDestroyer] = BOAT;
+   					 cpuShips[xPosDestroyer][yPosDestroyer-1] = BOAT; //place ship in rand cord
+
+   					 break;//break out of do while loop
+   				 }
+   			 }
+   		 }
+   		 else if(randDestroyerRot == 0)//if ship is horizontal
+   		 {
+   			 if(yPosDestroyer >= 1)//if destroyer will fit in grid
+   			 {
+   				 if(cpuShips[xPosDestroyer][yPosDestroyer]!= BOAT &&
+   					  cpuShips[xPosDestroyer-1][yPosDestroyer]!= BOAT) //if there is not a ship already there
+   				 {
+   					 cpuShips[xPosDestroyer][yPosDestroyer] = BOAT ;//place ship in rand cord
+   					 cpuShips[xPosDestroyer-1][yPosDestroyer] = BOAT ;
+
+   					 break;//break out of do while loop
+   				 }
+   			 }
+   		 }
+
+
+   	 } while(1);
+
+
+   	 //Patrolboat position
+
+	int xPosPB, yPosPB;
+
+	do
+	{
+  	int xPosPB = (rand() % 6); //gets random value for patrolboat x pos
+     	 int yPosPB = (rand() % 6); //gets random value for patrolboat y pos
+
+	} while (cpuShips[xPosPB][yPosPB]!= BOAT );
+
+   		 cpuShips[xPosPB][yPosPB] = BOAT ;
+
 }
 
