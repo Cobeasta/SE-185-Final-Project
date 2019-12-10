@@ -56,14 +56,21 @@ void main(){
 	
 	printArrays();//PRINT GAME 
 	
+	for(int j = 0; j < 6; ++j){
+		for(int k = 0; k < 6; ++k){
+			mvaddch(j*2 + 20, k*3 + 20, cpuShips[j][k]);
+		}
+		
+	}//shows cpu boats
+	
 	i = game_loop();//START GAME
 	endwin();//END NCUSES
 	
-	/*if (i == 10){
+	if (i == -10){
 		printf("YOU WIN!!");
 	}else{
 		printf("YOU LOSE :(");
-	}*/
+	}
 	
 }
 
@@ -80,7 +87,7 @@ int game_loop(){
 	int i;
 	printArrays();
 	while(1){
-		mvprintw(0, 0, "%d", turn);
+		
 		
 		
 		printArrays();
@@ -200,12 +207,23 @@ int player_turn(){
 	mvprintw(row, col, "%c", SELECTION);
 	
 	}
-
+	/*
 	if(x && prevX != x){
 		return shoot(PLAYER, gridRow, gridCol);
 
 		
+	}*/
+	if(x==1){	
+	
+	while(x==1){
+		scanf("%d, %d,%d,%d,%d, %d,%d,%d,%d,%d,%d,%d,%d, %d,%d,%d,%d", &timer, 
+		&triangle, &circle, &x, &square, &button_R3, &button_L3, &button_options,
+		&button_share, &button_R2, &button_L2, &button_R1, &button_L1, &up, &left, &down, &right);
+	}//wait until button is not pressed
+	
+	return shoot(PLAYER, gridRow, gridCol);
 	}
+	
 	else if(triangle && prevTriangle != triangle){
 		
 	}
@@ -222,7 +240,7 @@ int player_turn(){
 	prevRight = right;
 	prevUp = up;
 	prevDown = down;
-	prevX = x;
+	//prevX = x;
 	prevTriangle = triangle;
 	prevCircle = circle;
 	prevSquare = square;
@@ -244,13 +262,13 @@ int cpu_turn(){
 	while (1) {
 		tempRow = (int) (rand() % 6);
 		tempCol = (int) (rand() % 6); //random guess on grid
-		mvprintw(0, 3, "%d, %d", tempRow, tempCol);
+		
 		refresh();
 		if ((cpuGuesses[tempRow][tempCol] == HIT)|| (cpuGuesses[tempRow][tempCol] == MISS)){ //if the computer has already guessed ther
 			
 		}else{
 			result =  shoot(CPU, tempRow, tempCol);
-			mvprintw(0, 10, "%d", result);
+			
 			refresh();
 			return result;
 		}
@@ -501,6 +519,8 @@ void userBoatPlacement(){
 		
 		}
 		
+		mvprintw(12,0, "PLACE YOUR BOATS");//YELL AT USER TO PLACE THEIR BOATS
+		
 	for(i=0; i<=5; ++i){
 		for (j=0; j<=5; ++j){
 			
@@ -532,6 +552,8 @@ void cpuBoatPlacement()
     int carrierRot;
     int destroyerRot;
     int pbRot;
+	int xPosDestroyer;
+	int yPosDestroyer;
 
     //Orientation (vertical or horizontal)
 
@@ -600,10 +622,10 @@ void cpuBoatPlacement()
 
    	 //destroyer position
 
-   	 do {
+   	do {
 
-   		 int xPosDestroyer = (rand() % 6); //gets random value for destroyer x pos
-   		 int yPosDestroyer = (rand() % 6); //gets random value for destroyer y pos
+   		 xPosDestroyer = (rand() % 6); //gets random value for destroyer x pos
+   		 yPosDestroyer = (rand() % 6); //gets random value for destroyer y pos
 
    		 if(randDestroyerRot == 1)//if destroyer is vertical
    		 {
@@ -644,12 +666,13 @@ void cpuBoatPlacement()
 
 	do
 	{
-  	int xPosPB = (rand() % 6); //gets random value for patrolboat x pos
-     	 int yPosPB = (rand() % 6); //gets random value for patrolboat y pos
+		xPosPB = (rand() % 6); //gets random value for patrolboat x pos
+     	yPosPB = (rand() % 6); //gets random value for patrolboat y pos
 
-	} while (cpuShips[xPosPB][yPosPB]!= BOAT );
+	} while (cpuShips[xPosPB][yPosPB] == BOAT );
 
-   		 cpuShips[xPosPB][yPosPB] = BOAT ;
-
+   	cpuShips[xPosPB][yPosPB] = BOAT ;
+	
+	
 }
 
