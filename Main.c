@@ -38,7 +38,7 @@
 	char cpuGuesses[6][6];
 	
 	//compile with gcc Main.c -o main.exe -lncurses
-	//run with  ./ds4rd.exe -d 054c:05c4 -D DS4_BT -t -b -bd | ./main.exe
+	//run with  ./ds4rd.exe -d 054c:05c4 -D DS4_BT -t -b -bd -bt | ./main.exe
 int main(){
 	
 	srand(time(NULL));
@@ -46,6 +46,7 @@ int main(){
 	initscr();
 	initGrid();
 	userBoatPlacement();
+	clear();
 	printArrays();
 	
 	
